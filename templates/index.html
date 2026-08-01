@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AI Chatbot</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <span class="brand-mark"><i class="fa-solid fa-hexagon-nodes"></i></span>
+        <span class="brand-name">Azyyr<span class="brand-accent">AI</span></span>
+      </div>
+      <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Tutup sidebar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <button class="new-chat-btn" id="newChatBtn">
+      <i class="fa-solid fa-eraser"></i>
+      <span>Chat Baru</span>
+    </button>
+
+    <div class="sidebar-section-label">Percakapan</div>
+    <div class="conversation-list" id="conversationList">
+      <div class="conversation-item active">
+        <i class="fa-regular fa-message"></i>
+        <span>Percakapan saat ini</span>
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="device-indicator" id="deviceIndicator" title="ID perangkat anonim ini">
+        <span class="device-dot"></span>
+        <div class="device-text">
+          <span class="device-label">Perangkat Anonim</span>
+          <span class="device-id" id="deviceIdLabel">memuat...</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main-panel">
+
+    <header class="topbar">
+      <button class="icon-btn" id="sidebarOpen" aria-label="Buka sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="topbar-title">
+        <span class="status-dot"></span>
+        <span>AzyyrAi Assistant</span>
+      </div>
+      <button class="icon-btn" id="clearTopBtn" aria-label="Hapus percakapan" title="Hapus percakapan">
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+    </header>
+
+    <div class="chat-scroll-area" id="chatScrollArea">
+      <div class="chat-inner" id="chatInner">
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon"><i class="fa-solid fa-sparkles"></i></div>
+          <h1>Mulai percakapan</h1>
+          <p>Tanyakan apa saja, atau lampirkan foto, video, maupun dokumen untuk dibahas bersama asisten.</p>
+          <div class="suggestion-grid">
+            <button class="suggestion-chip" data-text="Jelaskan konsep AI generatif secara singkat">
+              <i class="fa-regular fa-lightbulb"></i>
+              Jelaskan AI generatif
+            </button>
+            <button class="suggestion-chip" data-text="Buatkan draf email profesional untuk klien">
+              <i class="fa-regular fa-envelope"></i>
+              Draf email profesional
+            </button>
+            <button class="suggestion-chip" data-text="Berikan ide judul artikel tentang produktivitas">
+              <i class="fa-regular fa-pen-to-square"></i>
+              Ide judul artikel
+            </button>
+            <button class="suggestion-chip" data-text="Ringkas cara kerja jaringan komputer">
+              <i class="fa-solid fa-diagram-project"></i>
+              Ringkas topik teknis
+            </button>
+          </div>
+        </div>
+
+        <div class="messages-list" id="messagesList"></div>
+
+      </div>
+    </div>
+
+    <div class="composer-wrap">
+      <div class="composer-inner">
+
+        <div class="attachment-preview-row" id="attachmentPreviewRow"></div>
+
+        <div class="drop-zone" id="dropZone">
+          <div class="composer-bar" id="composerBar">
+            <button class="icon-btn composer-attach" id="attachBtn" aria-label="Unggah media" title="Unggah foto, video, atau dokumen">
+              <i class="fa-solid fa-paperclip"></i>
+            </button>
+            <input type="file" id="fileInput" hidden accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.pdf,.txt,.doc,.docx,.csv,.md">
+
+            <textarea
+              id="messageInput"
+              class="composer-textarea"
+              placeholder="Kirim pesan ke AzyyrAI..."
+              rows="1"
+              maxlength="8000"
+            ></textarea>
+
+            <button class="composer-send" id="sendBtn" aria-label="Kirim pesan" disabled>
+              <i class="fa-solid fa-arrow-up"></i>
+            </button>
+          </div>
+          <div class="drop-zone-hint">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Lepaskan berkas di sini untuk mengunggah</span>
+          </div>
+        </div>
+
+        <div class="composer-footnote">AzyyrAI dapat membuat kesalahan. Periksa kembali informasi penting.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+  <img src="" alt="Pratinjau gambar" id="lightboxImg">
+</div>
+
+<!-- ============ TOAST CONTAINER ============ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
